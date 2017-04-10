@@ -25,37 +25,27 @@ import {
 
 const { width, height } = Dimensions.get('window');
 
-import * as urls from '../utils/URLS'
+import * as urls from '../utils/URLs'
 import request from '../utils/RequestUtil'
 
-class CountView extends Component {
+class HotNewsListView extends Component {
 
     constructor(props) {
         super(props)
-        this.countAdd = this.countAdd.bind(this)
-        this.countSub = this.countSub.bind(this)
+        this.newsRequest = this.newsRequest.bind(this)
         this.renderContent = this.renderContent.bind(this)
         this.renderListView = this.renderListView.bind(this)
         this.renderItem = this.renderItem.bind(this)
     }
 
-    countAdd() {
-        const { countActions } = this.props
-        countActions.requestZhihuNews();
-    }
-
-    handleHotListData(json) {
-        console.log(json)
-    }
-
-    countSub() {
-        const { countActions } = this.props
-        countActions.countSub();
+    newsRequest() {
+        const { hotNewsListActions } = this.props
+        hotNewsListActions.requestHotNewsList();
     }
 
     renderContent() {
-        const { isLoading } = this.props.zhihuNewsReducer;
-        if (isLoading) {
+        const { hotNewsListReducer } = this.props;
+        if (hotNewsListReducer.isLoading) {
             return <LoadingView />
         }
     }
@@ -86,10 +76,10 @@ class CountView extends Component {
     }
 
     renderListView() {
-        const { zhihuNewsReducer } = this.props;
-        if (zhihuNewsReducer.zhihuNews.length != 0) {
+        const { hotNewsListReducer } = this.props;
+        if (hotNewsListReducer.hotNewsList.length != 0) {
             const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-            const data = ds.cloneWithRows(zhihuNewsReducer.zhihuNews)
+            const data = ds.cloneWithRows(hotNewsListReducer.hotNewsList)
             return <ListView
                 dataSource={data}
                 renderRow={this.renderItem}
@@ -109,14 +99,14 @@ class CountView extends Component {
     }
 
     render() {
-        const { zhihuNewsReducer } = this.props
+        const { hotNewsListReducer } = this.props
         return (
             <View style={styles.container}>
                 {this.renderContent()}
 
-                <TouchableHighlight style={styles.itemView} underlayColor="red" onPress={this.countAdd}>
+                <TouchableHighlight style={styles.itemView} underlayColor="red" onPress={this.newsRequest}>
                     <Text style={styles.itemText}>
-                        {zhihuNewsReducer.zhihuNews.length}
+                        {hotNewsListReducer.hotNewsList.length}
                     </Text>
                 </TouchableHighlight>
                 {this.renderListView()}
@@ -260,6 +250,4 @@ const itemStyle = StyleSheet.create({
     }
 });
 
-// CountView.propTypes = propTypes
-
-export default CountView
+export default HotNewsListView

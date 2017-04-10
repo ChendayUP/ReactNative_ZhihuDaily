@@ -3,7 +3,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware, { END } from 'redux-saga';
 
-import mainReducers from '../reducer/rootReducer';
+import rootReducer from '../reducer/rootReducer';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -13,15 +13,10 @@ middlewares.push(sagaMiddleware);
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 
 export default function configureStore(initialState) {
-  const store = createStoreWithMiddleware(mainReducers, initialState);
+  const store = createStoreWithMiddleware(rootReducer, initialState);
   // install saga run
   store.runSaga = sagaMiddleware.run;
   store.close = () => store.dispatch(END);
 
   return store;
 }
-
-// export function configStore() {
-//   const store = createStore(mainReducers)
-//   return store;
-// }
