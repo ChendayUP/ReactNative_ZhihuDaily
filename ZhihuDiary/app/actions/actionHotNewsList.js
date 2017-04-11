@@ -6,14 +6,10 @@ export function fetchHotNewsList() {
     }
 }
 
-export function receiveHotNewsList(newsList) {
-    // console.log('newsList' + newsList)
-    // newsList.forEach(function(element) {
-    //    console.log('element  :' + element.news_id) 
-    // }, this);
+export function receiveHotNewsList(hotNewsList) {
     return {
         type: types.RECEIVE_HOTNEWS_LIST,
-        newsList
+        hotNewsList
     }
 }
 

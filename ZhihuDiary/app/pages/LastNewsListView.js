@@ -1,7 +1,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import LoadingView from '../components/LoadingView'
-import { Actions, ActionConst } from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 
 import {
     Button,
@@ -15,22 +15,15 @@ import {
     TimeAgo,
     Platform,
     TouchableOpacity,
-    Image,
-    Animated
+    Image
 } from 'react-native'
-
-// const propTypes = {
-//     countActions: PropTypes.object,
-//     countObject: PropTypes.object.isRequired
-// };
-
 
 const { width, height } = Dimensions.get('window');
 
 import * as urls from '../utils/URLs'
 import request from '../utils/RequestUtil'
 
-class HotNewsListView extends Component {
+class LastNewsListView extends Component {
 
     constructor(props) {
         super(props)
@@ -41,29 +34,26 @@ class HotNewsListView extends Component {
     }
 
     newsRequest() {
-        const { hotNewsListActions } = this.props
-        hotNewsListActions.requestHotNewsList();
+        const { lastNewsListActions } = this.props
+        lastNewsListActions.requestLastNewsList();
     }
 
     renderContent() {
-        const { hotNewsListReducer } = this.props;
-        if (hotNewsListReducer.isLoading) {
+        const { lastNewsListReducer } = this.props;
+        if (lastNewsListReducer.isLoading) {
             return <LoadingView />
         }
     }
 
-    jumpToDetailsList(news) {
-        Actions.detailsList({ type: ActionConst.PUSH, news_id:news.news_id})
-    }
-    handleData(json) {
-        console.log(jsbn);
+    jumpBack() {
+        Actions.pop;
     }
 
     renderItem(news) {
         return (
-            <TouchableOpacity onPress={() => this.jumpToDetailsList(news)}>
+            <TouchableOpacity onPress={Actions.pop}>
                 <View style={itemStyle.containerItem}>
-                    <Image style={itemStyle.itemImg} source={{ uri: news.thumbnail }} />
+                    <Image style={itemStyle.itemImg} source={{ uri: news.images[0] }} />
                     <View style={itemStyle.itemRightContent}>
                         <Text style={itemStyle.title}>
                             {news.title}
@@ -72,9 +62,10 @@ class HotNewsListView extends Component {
                             <Text style={itemStyle.userName}>
                                 {news.news_id}
                             </Text>
+
                             {/**
-                            <TimeAgo style={itemStyle.timeAgo} time={news.date} />
-                            **/}
+                                 <TimeAgo style={itemStyle.timeAgo} time="20170101" />
+                                **/}
                         </View>
 
                     </View>
@@ -85,10 +76,10 @@ class HotNewsListView extends Component {
     }
 
     renderListView() {
-        const { hotNewsListReducer } = this.props;
-        if (hotNewsListReducer.hotNewsList.length != 0) {
+        const { date, stories, top_stories } = this.props.lastNewsListReducer.receiveObject;
+        if (stories && stories.length != 0) {
             const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-            const data = ds.cloneWithRows(hotNewsListReducer.hotNewsList)
+            const data = ds.cloneWithRows(stories)
             return <ListView
                 dataSource={data}
                 renderRow={this.renderItem}
@@ -108,14 +99,20 @@ class HotNewsListView extends Component {
     }
 
     render() {
-        const { hotNewsListReducer } = this.props
+        const { date, stories, top_stories } = this.props.lastNewsListReducer.receiveObject;
+        var storiesSize = 0;
+        if (!stories) {
+            storiesSize = 0;
+        } else {
+            storiesSize = stories.length;
+        }
         return (
             <View style={styles.container}>
                 {this.renderContent()}
 
                 <TouchableHighlight style={styles.itemView} underlayColor="red" onPress={this.newsRequest}>
                     <Text style={styles.itemText}>
-                        {hotNewsListReducer.hotNewsList.length}
+                        {storiesSize}
                     </Text>
                 </TouchableHighlight>
                 {this.renderListView()}
@@ -259,4 +256,4 @@ const itemStyle = StyleSheet.create({
     }
 });
 
-export default HotNewsListView
+export default LastNewsListView

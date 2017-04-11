@@ -6,10 +6,13 @@ import { Text, View, StyleSheet, Navigator } from 'react-native'
 
 import { Router, Scene, ActionConst } from 'react-native-router-flux';
 
+
 // import CountContainer from '../containers/countContainer';
 // import YearContainerView from '../containers/yearContainer';
 
 import hotNewsListContainer from '../containers/hotNewsListContainer'
+import lastNewsListContainer from '../containers/lastNewsListContainer'
+import detailsListContainer from '../containers/detailsContainer'
 
 import TabIcon from '../components/TabIcon';
 
@@ -42,15 +45,17 @@ class App extends React.Component {
                 titleStyle={styles.navBarTitle} >
                 <Scene key="root">
                     <Scene
-                        key="hotNewsListContainer"
+                        key="hotNewsList"
                         component={hotNewsListContainer}
-                        title="hotNewsListContainer" />
-                    {/**
+                        title="hotNewsList" />
                     <Scene
-                        key="YearContainerView"
-                        component={YearContainerView}
-                        title="YearContainerView" />
-                        **/}
+                        key="lastNewsList"
+                        component={lastNewsListContainer}
+                        title="lastNewsList" />
+                    <Scene
+                        key="detailsList"
+                        component={detailsListContainer}
+                        title="detailsList" />
                 </Scene>
             </RouterWithRedux>
         )
