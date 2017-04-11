@@ -73637,7 +73637,8 @@ var _actionTypes=require(460                     );var actionTypes=babelHelpers.
 var _update=require(401               );var _update2=babelHelpers.interopRequireDefault(_update); // 401 = react/lib/update
 
 var initialState={
-isLoading:false,
+isHeadLoading:false,
+isRootLoading:false,
 dateList:[],
 storiesList:[],
 top_storiesList:[]};exports.default=
@@ -73652,7 +73653,7 @@ newsListReducer=function newsListReducer(){var state=arguments.length>0&&argumen
 switch(action.type){
 case actionTypes.FETCH_LATESTNEWS_LIST:
 return(0,_update2.default)(state,{
-isLoading:{$set:true}});
+isHeadLoading:{$set:true}});
 
 case actionTypes.RECEIVE_LATESTNEWS_LIST:
 dateList=[];
@@ -73663,27 +73664,27 @@ dateList.push(addModel.date);
 storiesList.push(addModel.stories);
 top_storiesList.push(addModel.top_stories);
 return(0,_update2.default)(state,{
-isLoading:{$set:false},
+isHeadLoading:{$set:false},
 dateList:{$set:dateList},
 storiesList:{$set:storiesList},
 top_storiesList:{$set:top_storiesList}});
 
 case actionTypes.FETCH_BEFORENEWS_LIST:
 return(0,_update2.default)(state,{
-isLoading:{$set:true}});
+isFootLoading:{$set:true}});
 
 case actionTypes.RECEIVE_BEFORENEWS_LIST:
 var appendModel=action.receiveObject;
-if(!appendModel||appendModel.length==0){
-return(0,_update2.default)(state,{
-isLoading:{$set:false}});
 
-}
+
+
+
+
 state.dateList.push(appendModel.date);
 state.storiesList.push(appendModel.stories);
 state.top_storiesList.push(appendModel.top_stories);
 return(0,_update2.default)(state,{
-isLoading:{$set:false},
+isFootLoading:{$set:false},
 dateList:{$set:dateList},
 storiesList:{$set:storiesList},
 top_storiesList:{$set:top_storiesList}});
@@ -79979,6 +79980,10 @@ _this.renderItem=_this.renderItem.bind(_this);return _this;
 {var
 newsListActions=this.props.newsListActions;
 newsListActions.requestLatestNewsList();
+}},{key:'componentDidMount',value:function componentDidMount()
+
+{
+
 }},{key:'newsRequest',value:function newsRequest()
 
 {
@@ -79987,7 +79992,7 @@ newsListActions.requestLatestNewsList();
 
 {var
 newsListReducer=this.props.newsListReducer;
-if(newsListReducer.isLoading){
+if(newsListReducer.isHeadLoading||newsListReducer.isFootLoading){
 return _react2.default.createElement(_LoadingView2.default,null);
 }
 }},{key:'jumpBack',value:function jumpBack()
@@ -80048,7 +80053,7 @@ renderRow:this.renderItem,
 refreshControl:
 _react2.default.createElement(_reactNative.RefreshControl,{
 style:styles.refreshControlBase,
-refreshing:this.props.newsListReducer.isLoading,
+refreshing:this.props.newsListReducer.isHeadLoading,
 onRefresh:this.reloadData.bind(this),
 title:'Loading...',
 colors:['#ffaa66cc','#ff00ddff','#ffffbb33','#ffff4444']}),
@@ -80063,11 +80068,12 @@ onEndReached:this.onEndReached.bind(this)});
 }},{key:'onEndReached',value:function onEndReached()
 
 {var
-newsListActions=this.props.newsListActions;var
-dateList=this.props.newsListReducer.dateList;
-setTimeout(function(){
+newsListActions=this.props.newsListActions;var _props$newsListReduce2=
+this.props.newsListReducer,isFootLoading=_props$newsListReduce2.isFootLoading,dateList=_props$newsListReduce2.dateList;
+
+if(!isFootLoading){
 newsListActions.requestBeforeNewsList(dateList[dateList.length-1]);
-},1000);
+}
 }},{key:'renderFooter',value:function renderFooter()
 
 {
@@ -80081,12 +80087,15 @@ return _react2.default.createElement(_reactNative.View,{style:{marginVertical:10
 }},{key:'reloadData',value:function reloadData()
 
 {var
+isHeadLoading=this.props.newsListReducer.isHeadLoading;var
+
 newsListActions=this.props.newsListActions;
 newsListActions.requestLatestNewsList();
+
 }},{key:'render',value:function render()
 
-{var _props$newsListReduce2=
-this.props.newsListReducer,dateList=_props$newsListReduce2.dateList,storiesList=_props$newsListReduce2.storiesList,top_storiesList=_props$newsListReduce2.top_storiesList;
+{var _props$newsListReduce3=
+this.props.newsListReducer,dateList=_props$newsListReduce3.dateList,storiesList=_props$newsListReduce3.storiesList,top_storiesList=_props$newsListReduce3.top_storiesList;
 var storiesSize=0;
 if(!storiesList){
 storiesSize=0;

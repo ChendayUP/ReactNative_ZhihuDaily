@@ -38,13 +38,17 @@ class NewsListView extends Component {
         newsListActions.requestLatestNewsList();
     }
 
+    componentDidMount() {
+
+    }
+
     newsRequest() {
 
     }
 
     renderContent() {
         const { newsListReducer } = this.props;
-        if (newsListReducer.isLoading) {
+        if (newsListReducer.isHeadLoading || newsListReducer.isFootLoading) {
             return <LoadingView />
         }
     }
@@ -105,7 +109,7 @@ class NewsListView extends Component {
                 refreshControl={
                     <RefreshControl
                         style={styles.refreshControlBase}
-                        refreshing={this.props.newsListReducer.isLoading}
+                        refreshing={this.props.newsListReducer.isHeadLoading}
                         onRefresh={this.reloadData.bind(this)}
                         title="Loading..."
                         colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
@@ -121,10 +125,11 @@ class NewsListView extends Component {
 
     onEndReached() {
         const { newsListActions } = this.props
-        const { dateList } = this.props.newsListReducer
-        setTimeout(function () {
+        const { isFootLoading, dateList } = this.props.newsListReducer
+
+        if (!isFootLoading) {
             newsListActions.requestBeforeNewsList(dateList[dateList.length - 1]);
-        }, 1000);
+        }
     }
 
     renderFooter() {
@@ -138,8 +143,11 @@ class NewsListView extends Component {
     }
 
     reloadData() {
-        const { newsListActions } = this.props
-        newsListActions.requestLatestNewsList();
+        const { isHeadLoading } = this.props.newsListReducer
+        if (!isHeadLoading) {
+            const { newsListActions } = this.props
+            newsListActions.requestLatestNewsList();
+        }
     }
 
     render() {
