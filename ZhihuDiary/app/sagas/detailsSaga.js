@@ -14,10 +14,11 @@ export function* requestDetails(news_id) {
     console.log('1')
     yield put(fetchDetailsList());
     console.log('2')
-    const receiveObject = yield call(request, urls.NEWS_NEWINFO_CONTENT + news_id, 'get');
+    const url = urls.NEWS_HEADER + urls.NEWS_NEWINFO_CONTENT + news_id;
+    const receiveObject = yield call(request, url, 'get');
     console.log('3')
     console.log(receiveObject)
-    yield put(receiveDetailsList(receiveObject.share_url));
+    yield put(receiveDetailsList(receiveObject));
     // receiveZhihuNews(typeList.recent)
     console.log('4')
     // yield call(store.save, 'zhihuNews', typeList.recent);

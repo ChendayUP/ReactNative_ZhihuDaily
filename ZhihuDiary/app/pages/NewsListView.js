@@ -1,7 +1,7 @@
 
 import React, { Component, PropTypes } from 'react'
 import LoadingView from '../components/LoadingView'
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 
 import {
     Button,
@@ -57,9 +57,14 @@ class NewsListView extends Component {
         Actions.pop;
     }
 
+    clickAtCell(news, sectionId, rowId) {
+        // console.log('click')
+        Actions.detailsList({ type: ActionConst.PUSH, news_id: news.id })
+    }
+
     renderItem(news, sectionId, rowId) {
         return (
-            <TouchableOpacity onPress={Actions.pop}>
+            <TouchableOpacity onPress={() => this.clickAtCell(news, sectionId, rowId)}>
                 <View style={itemStyle.containerItem}>
                     <Image style={itemStyle.itemImg} source={{ uri: news.images[0] }} />
                     <View style={itemStyle.itemRightContent}>
@@ -115,7 +120,7 @@ class NewsListView extends Component {
                         colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
                     />
                 }
-                renderFooter={this.renderFooter.bind(this)}
+                // renderFooter={this.renderFooter.bind(this)}
                 renderSectionHeader={this.renaderSectionHeader.bind(this)}
                 onEndReached={this.onEndReached.bind(this)}
             // onEndReachedThreshold={0}
@@ -130,16 +135,6 @@ class NewsListView extends Component {
         if (!isFootLoading) {
             newsListActions.requestBeforeNewsList(dateList[dateList.length - 1]);
         }
-    }
-
-    renderFooter() {
-
-        if (this.state && this.state.isShowBottomRefresh) {
-            return (<View style={{ marginVertical: 10 }}>
-                <ActivityIndicator />
-            </View>);
-        }
-        return <View style={{ marginVertical: 10 }} />;;
     }
 
     reloadData() {

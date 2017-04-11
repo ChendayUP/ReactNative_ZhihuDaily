@@ -73627,6 +73627,8 @@ var RECEIVE_BEFORENEWS_LIST=exports.RECEIVE_BEFORENEWS_LIST='RECEIVE_BEFORENEWS_
 var REQUEST_DETAILS_LIST=exports.REQUEST_DETAILS_LIST='REQUEST_DETAILS_LIST';
 var FETCH_DETAILS_LIST=exports.FETCH_DETAILS_LIST='FETCH_DETAILS_LIST';
 var RECEIVE_DETAILS_LIST=exports.RECEIVE_DETAILS_LIST='RECEIVE_DETAILS_LIST';
+
+var SHOW_DETAILS_LIST=exports.SHOW_DETAILS_LIST='SHOW_DETAILS_LIST';
 }, 460, null, "ZhihuDiary/app/actions/actionTypes.js");
 __d(/* ZhihuDiary/app/reducer/newsListReducer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 
@@ -73675,11 +73677,11 @@ isFootLoading:{$set:true}});
 
 case actionTypes.RECEIVE_BEFORENEWS_LIST:
 var appendModel=action.receiveObject;
+if(!appendModel||appendModel.length==0){
+return(0,_update2.default)(state,{
+isFootLoading:{$set:false}});
 
-
-
-
-
+}
 state.dateList.push(appendModel.date);
 state.storiesList.push(appendModel.stories);
 state.top_storiesList.push(appendModel.top_stories);
@@ -73713,6 +73715,10 @@ isLoading:{$set:true}});
 case actionTypes.RECEIVE_DETAILS_LIST:
 return(0,_update2.default)(state,{
 isLoading:{$set:false},
+details:{$set:action.details}});
+
+case actionTypes.SHOW_DETAILS_LIST:
+return(0,_update2.default)(state,{
 details:{$set:action.details}});
 
 default:
@@ -79999,11 +80005,16 @@ return _react2.default.createElement(_LoadingView2.default,null);
 
 {
 _reactNativeRouterFlux.Actions.pop;
-}},{key:'renderItem',value:function renderItem(
+}},{key:'clickAtCell',value:function clickAtCell(
 
 news,sectionId,rowId){
+
+_reactNativeRouterFlux.Actions.detailsList({type:_reactNativeRouterFlux.ActionConst.PUSH,news_id:news.id});
+}},{key:'renderItem',value:function renderItem(
+
+news,sectionId,rowId){var _this2=this;
 return(
-_react2.default.createElement(_reactNative.TouchableOpacity,{onPress:_reactNativeRouterFlux.Actions.pop},
+_react2.default.createElement(_reactNative.TouchableOpacity,{onPress:function onPress(){return _this2.clickAtCell(news,sectionId,rowId);}},
 _react2.default.createElement(_reactNative.View,{style:itemStyle.containerItem},
 _react2.default.createElement(_reactNative.Image,{style:itemStyle.itemImg,source:{uri:news.images[0]}}),
 _react2.default.createElement(_reactNative.View,{style:itemStyle.itemRightContent},
@@ -80059,7 +80070,7 @@ title:'Loading...',
 colors:['#ffaa66cc','#ff00ddff','#ffffbb33','#ffff4444']}),
 
 
-renderFooter:this.renderFooter.bind(this),
+
 renderSectionHeader:this.renaderSectionHeader.bind(this),
 onEndReached:this.onEndReached.bind(this)});
 
@@ -80074,24 +80085,14 @@ this.props.newsListReducer,isFootLoading=_props$newsListReduce2.isFootLoading,da
 if(!isFootLoading){
 newsListActions.requestBeforeNewsList(dateList[dateList.length-1]);
 }
-}},{key:'renderFooter',value:function renderFooter()
-
-{
-
-if(this.state&&this.state.isShowBottomRefresh){
-return _react2.default.createElement(_reactNative.View,{style:{marginVertical:10}},
-_react2.default.createElement(ActivityIndicator,null));
-
-}
-return _react2.default.createElement(_reactNative.View,{style:{marginVertical:10}});;
 }},{key:'reloadData',value:function reloadData()
 
 {var
-isHeadLoading=this.props.newsListReducer.isHeadLoading;var
-
+isHeadLoading=this.props.newsListReducer.isHeadLoading;
+if(!isHeadLoading){var
 newsListActions=this.props.newsListActions;
 newsListActions.requestLatestNewsList();
-
+}
 }},{key:'render',value:function render()
 
 {var _props$newsListReduce3=
@@ -80299,10 +80300,17 @@ receiveDetailsList=receiveDetailsList;exports.
 
 
 
-requestDetailsList=requestDetailsList;var _actionTypes=require(460            );var types=babelHelpers.interopRequireWildcard(_actionTypes);function fetchDetailsList(){return{type:types.FETCH_DETAILS_LIST};}function receiveDetailsList(details){return{type:types.RECEIVE_DETAILS_LIST,details:details};}function requestDetailsList(news_id){ // 460 = ./actionTypes
+requestDetailsList=requestDetailsList;exports.
+
+
+
+
+
+
+showDetailsList=showDetailsList;var _actionTypes=require(460            );var types=babelHelpers.interopRequireWildcard(_actionTypes);function fetchDetailsList(){return{type:types.FETCH_DETAILS_LIST};}function receiveDetailsList(details){return{type:types.RECEIVE_DETAILS_LIST,details:details};}function requestDetailsList(news_id){return{type:types.REQUEST_DETAILS_LIST,news_id:news_id};}function showDetailsList(details){ // 460 = ./actionTypes
 return{
-type:types.REQUEST_DETAILS_LIST,
-news_id:news_id};
+type:type.SHOW_DETAILS_LIST,
+details:details};
 
 }
 }, 683, null, "ZhihuDiary/app/actions/actionDetails.js");
@@ -80312,6 +80320,7 @@ var _LoadingView=require(512                        );var _LoadingView2=babelHel
 var _reactNativeRouterFlux=require(462                       ); // 462 = react-native-router-flux
 
 var _reactNative=require(42            ); // 42 = react-native
+
 
 
 
@@ -80342,6 +80351,14 @@ props));
 {var _props=
 this.props,detailsActions=_props.detailsActions,news_id=_props.news_id;
 detailsActions.requestDetailsList(news_id);
+}},{key:'onRefresh',value:function onRefresh()
+
+{
+console.log('top');
+}},{key:'onEndReached',value:function onEndReached()
+
+{
+console.log('end');
 }},{key:'render',value:function render()
 
 {var
@@ -80350,7 +80367,11 @@ var load=detailsReducer.isLoading?
 _react2.default.createElement(_LoadingView2.default,null):
 _react2.default.createElement(Detail,{data:detailsReducer.details});
 return(
-_react2.default.createElement(_reactNative.View,{style:commonStyles.container},
+_react2.default.createElement(_reactNative.View,{
+style:commonStyles.container,
+onRefresh:this.onRefresh.bind(this),
+onEndReached:this.onEndReached.bind(this)},
+
 load));
 
 
@@ -80363,10 +80384,15 @@ props));
 }babelHelpers.createClass(Detail,[{key:'render',value:function render()
 
 {
+var details=this.props.data;
+var cssType=details.css[0];
+var body=details.body;
+var htmlString="<html><head><link rel=\"stylesheet\" href=\""+
+cssType+"\"></head><body>"+
+body+"</body></html>";
+var a=htmlString;
 return(
-_react2.default.createElement(_reactNative.WebView,{
-source:{uri:this.props.data}}));
-
+_react2.default.createElement(_reactNative.WebView,{source:{html:htmlString}}));
 
 }}]);return Detail;}(_react.Component);
 
@@ -80375,6 +80401,10 @@ var commonStyles=_reactNative.StyleSheet.create({
 container:{
 flex:1,
 marginTop:60},
+
+topImage:{
+flex:1,
+marginTop:0},
 
 flexOne:{
 flex:1},
@@ -88416,7 +88446,8 @@ requestDetails=requestDetails;exports.
 
 
 
-watchRequestDetailsList=watchRequestDetailsList;var _effects=require(456                 );var _reactNativeSimpleStore=require(673                        );var _reactNativeSimpleStore2=babelHelpers.interopRequireDefault(_reactNativeSimpleStore);var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs);var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes);var _ToastUtil=require(675                 );var _RequestUtil=require(514                   );var _actionDetails=require(683                       );var _marked=[requestDetails,watchRequestDetailsList].map(regeneratorRuntime.mark);function requestDetails(news_id){var receiveObject;return regeneratorRuntime.wrap(function requestDetails$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.prev=0;console.log('1');_context.next=4;return(0,_effects.put)((0,_actionDetails.fetchDetailsList)());case 4:console.log('2');_context.next=7;return(0,_effects.call)(_RequestUtil.request,urls.NEWS_NEWINFO_CONTENT+news_id,'get');case 7:receiveObject=_context.sent;console.log('3');console.log(receiveObject);_context.next=12;return(0,_effects.put)((0,_actionDetails.receiveDetailsList)(receiveObject.share_url));case 12:console.log('4');_context.next=21;break;case 15:_context.prev=15;_context.t0=_context['catch'](0);_context.next=19;return(0,_effects.put)((0,_actionDetails.receiveDetailsList)([]));case 19:_context.next=21;return(0,_ToastUtil.toastShort)('网络发生错误，请重试');case 21:case'end':return _context.stop();}}},_marked[0],this,[[0,15]]);}function watchRequestDetailsList(){var _ref,news_id;return regeneratorRuntime.wrap(function watchRequestDetailsList$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:if(! // 683 = ../actions/actionDetails // 514 = ../utils/RequestUtil // 675 = ../utils/ToastUtil // 460 = ../actions/actionTypes // 513 = ../utils/URLs // 673 = react-native-simple-store // 456 = redux-saga/effects
+
+watchRequestDetailsList=watchRequestDetailsList;var _effects=require(456                 );var _reactNativeSimpleStore=require(673                        );var _reactNativeSimpleStore2=babelHelpers.interopRequireDefault(_reactNativeSimpleStore);var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs);var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes);var _ToastUtil=require(675                 );var _RequestUtil=require(514                   );var _actionDetails=require(683                       );var _marked=[requestDetails,watchRequestDetailsList].map(regeneratorRuntime.mark);function requestDetails(news_id){var url,receiveObject;return regeneratorRuntime.wrap(function requestDetails$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.prev=0;console.log('1');_context.next=4;return(0,_effects.put)((0,_actionDetails.fetchDetailsList)());case 4:console.log('2');url=urls.NEWS_HEADER+urls.NEWS_NEWINFO_CONTENT+news_id;_context.next=8;return(0,_effects.call)(_RequestUtil.request,url,'get');case 8:receiveObject=_context.sent;console.log('3');console.log(receiveObject);_context.next=13;return(0,_effects.put)((0,_actionDetails.receiveDetailsList)(receiveObject));case 13:console.log('4');_context.next=22;break;case 16:_context.prev=16;_context.t0=_context['catch'](0);_context.next=20;return(0,_effects.put)((0,_actionDetails.receiveDetailsList)([]));case 20:_context.next=22;return(0,_ToastUtil.toastShort)('网络发生错误，请重试');case 22:case'end':return _context.stop();}}},_marked[0],this,[[0,16]]);}function watchRequestDetailsList(){var _ref,news_id;return regeneratorRuntime.wrap(function watchRequestDetailsList$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:if(! // 683 = ../actions/actionDetails // 514 = ../utils/RequestUtil // 675 = ../utils/ToastUtil // 460 = ../actions/actionTypes // 513 = ../utils/URLs // 673 = react-native-simple-store // 456 = redux-saga/effects
 true){_context2.next=9;break;}_context2.next=3;return(
 
 

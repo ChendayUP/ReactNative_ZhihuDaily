@@ -19,6 +19,10 @@ export default detailsReducer = (state = initialState, action) => {
                 isLoading: { $set: false },
                 details: { $set: action.details }
             })
+        case actionTypes.SHOW_DETAILS_LIST:
+            return update(state, {
+                details: { $set: action.details }
+            })
         default:
             return state
     }

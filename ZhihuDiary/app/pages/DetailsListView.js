@@ -17,7 +17,8 @@ import {
     TouchableOpacity,
     Image,
     Animated,
-    WebView
+    WebView,
+    ScrollView
 } from 'react-native'
 
 const { width, height } = Dimensions.get('window');
@@ -36,13 +37,25 @@ class DetailsListView extends Component {
         detailsActions.requestDetailsList(news_id);
     }
 
+    onRefresh() {
+        console.log('top')
+    }
+
+    onEndReached() {
+        console.log('end')
+    }
+
     render() {
         const { detailsReducer } = this.props;
         var load = (detailsReducer.isLoading) ?
             (<LoadingView />) :
             (<Detail data={detailsReducer.details} />);
         return (
-            <View style={commonStyles.container}>
+            <View
+                style={commonStyles.container}
+                onRefresh={this.onRefresh.bind(this)}
+                onEndReached={this.onEndReached.bind(this)}
+            >
                 {load}
             </View>
         );
@@ -55,10 +68,15 @@ class Detail extends Component {
     }
 
     render() {
+        const details = this.props.data;
+        const cssType = details.css[0];
+        const body = details.body;
+        const htmlString = "<html><head><link rel=\"stylesheet\" href=\"" +
+            cssType + "\"></head><body>" +
+            body + "</body></html>";
+        const a = htmlString;
         return (
-            <WebView
-                source={{ uri: this.props.data }}
-            />
+            <WebView source={{ html: htmlString }} />
         );
     }
 }
@@ -67,6 +85,10 @@ var commonStyles = StyleSheet.create({
     container: {
         flex: 1,
         marginTop: 60
+    },
+    topImage: {
+        flex: 1,
+        marginTop: 0
     },
     flexOne: {
         flex: 1

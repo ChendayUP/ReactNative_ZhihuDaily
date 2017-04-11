@@ -19,3 +19,10 @@ export function requestDetailsList(news_id) {
         news_id
     }
 }
+
+export function showDetailsList(details) {
+    return {
+        type: type.SHOW_DETAILS_LIST,
+        details
+    }
+}
