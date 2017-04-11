@@ -11,7 +11,7 @@ import { Router, Scene, ActionConst } from 'react-native-router-flux';
 // import YearContainerView from '../containers/yearContainer';
 
 import hotNewsListContainer from '../containers/hotNewsListContainer'
-import lastNewsListContainer from '../containers/lastNewsListContainer'
+import newsListContainer from '../containers/newsListContainer'
 import detailsListContainer from '../containers/detailsContainer'
 
 import TabIcon from '../components/TabIcon';
@@ -45,13 +45,13 @@ class App extends React.Component {
                 titleStyle={styles.navBarTitle} >
                 <Scene key="root">
                     <Scene
+                        key="newsList"
+                        component={newsListContainer}
+                        title="newsList" />
+                    <Scene
                         key="hotNewsList"
                         component={hotNewsListContainer}
                         title="hotNewsList" />
-                    <Scene
-                        key="lastNewsList"
-                        component={lastNewsListContainer}
-                        title="lastNewsList" />
                     <Scene
                         key="detailsList"
                         component={detailsListContainer}

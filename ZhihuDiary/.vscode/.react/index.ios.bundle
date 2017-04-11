@@ -73560,12 +73560,12 @@ __d(/* ZhihuDiary/app/reducer/rootReducer.js */function(global, require, module,
 var _redux=require(404    ); // 404 = redux
 
 var _hotNewsListReducer=require(459                   );var _hotNewsListReducer2=babelHelpers.interopRequireDefault(_hotNewsListReducer); // 459 = ./hotNewsListReducer
-var _lastNewsListReducer=require(676                    );var _lastNewsListReducer2=babelHelpers.interopRequireDefault(_lastNewsListReducer); // 676 = ./lastNewsListReducer
+var _newsListReducer=require(688                );var _newsListReducer2=babelHelpers.interopRequireDefault(_newsListReducer); // 688 = ./newsListReducer
 var _detailsReducer=require(681               );var _detailsReducer2=babelHelpers.interopRequireDefault(_detailsReducer); // 681 = ./detailsReducer
 
 var rootReducer=(0,_redux.combineReducers)({
 hotNewsListReducer:_hotNewsListReducer2.default,
-lastNewsListReducer:_lastNewsListReducer2.default,
+newsListReducer:_newsListReducer2.default,
 detailsReducer:_detailsReducer2.default});exports.default=
 
 
@@ -73613,9 +73613,13 @@ var RECEIVE_HOTNEWS_LIST=exports.RECEIVE_HOTNEWS_LIST='RECEIVE_HOTNEWS_LIST';
 
 
 
-var REQUEST_LASTNEWS_LIST=exports.REQUEST_LASTNEWS_LIST='REQUEST_LASTNEWS_LIST';
-var FETCH_LASTNEWS_LIST=exports.FETCH_LASTNEWS_LIST='FETCH_LASTNEWS_LIST';
-var RECEIVE_LASTNEWS_LIST=exports.RECEIVE_LASTNEWS_LIST='RECEIVE_LASTNEWS_LIST';
+var REQUEST_LATESTNEWS_LIST=exports.REQUEST_LATESTNEWS_LIST='REQUEST_LATESTNEWS_LIST';
+var FETCH_LATESTNEWS_LIST=exports.FETCH_LATESTNEWS_LIST='FETCH_LATESTNEWS_LIST';
+var RECEIVE_LATESTNEWS_LIST=exports.RECEIVE_LATESTNEWS_LIST='RECEIVE_LATESTNEWS_LIST';
+
+var REQUEST_BEFORENEWS_LIST=exports.REQUEST_BEFORENEWS_LIST='REQUEST_BEFORENEWS_LIST';
+var FETCH_BEFORENEWS_LIST=exports.FETCH_BEFORENEWS_LIST='FETCH_BEFORENEWS_LIST';
+var RECEIVE_BEFORENEWS_LIST=exports.RECEIVE_BEFORENEWS_LIST='RECEIVE_BEFORENEWS_LIST';
 
 
 
@@ -73624,7 +73628,7 @@ var REQUEST_DETAILS_LIST=exports.REQUEST_DETAILS_LIST='REQUEST_DETAILS_LIST';
 var FETCH_DETAILS_LIST=exports.FETCH_DETAILS_LIST='FETCH_DETAILS_LIST';
 var RECEIVE_DETAILS_LIST=exports.RECEIVE_DETAILS_LIST='RECEIVE_DETAILS_LIST';
 }, 460, null, "ZhihuDiary/app/actions/actionTypes.js");
-__d(/* ZhihuDiary/app/reducer/lastNewsListReducer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
+__d(/* ZhihuDiary/app/reducer/newsListReducer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 
 
 
@@ -73634,25 +73638,61 @@ var _update=require(401               );var _update2=babelHelpers.interopRequire
 
 var initialState={
 isLoading:false,
-receiveObject:{}};exports.default=
+dateList:[],
+storiesList:[],
+top_storiesList:[]};exports.default=
 
 
-lastNewsListReducer=function lastNewsListReducer(){var state=arguments.length>0&&arguments[0]!==undefined?arguments[0]:initialState;var action=arguments[1];
+
+
+
+
+
+newsListReducer=function newsListReducer(){var state=arguments.length>0&&arguments[0]!==undefined?arguments[0]:initialState;var action=arguments[1];
 switch(action.type){
-case actionTypes.FETCH_LASTNEWS_LIST:
+case actionTypes.FETCH_LATESTNEWS_LIST:
 return(0,_update2.default)(state,{
 isLoading:{$set:true}});
 
-case actionTypes.RECEIVE_LASTNEWS_LIST:
+case actionTypes.RECEIVE_LATESTNEWS_LIST:
+dateList=[];
+storiesList=[];
+top_storiesList=[];
+var addModel=action.receiveObject;
+dateList.push(addModel.date);
+storiesList.push(addModel.stories);
+top_storiesList.push(addModel.top_stories);
 return(0,_update2.default)(state,{
 isLoading:{$set:false},
-receiveObject:{$set:action.receiveObject}});
+dateList:{$set:dateList},
+storiesList:{$set:storiesList},
+top_storiesList:{$set:top_storiesList}});
+
+case actionTypes.FETCH_BEFORENEWS_LIST:
+return(0,_update2.default)(state,{
+isLoading:{$set:true}});
+
+case actionTypes.RECEIVE_BEFORENEWS_LIST:
+var appendModel=action.receiveObject;
+if(!appendModel||appendModel.length==0){
+return(0,_update2.default)(state,{
+isLoading:{$set:false}});
+
+}
+state.dateList.push(appendModel.date);
+state.storiesList.push(appendModel.stories);
+state.top_storiesList.push(appendModel.top_stories);
+return(0,_update2.default)(state,{
+isLoading:{$set:false},
+dateList:{$set:dateList},
+storiesList:{$set:storiesList},
+top_storiesList:{$set:top_storiesList}});
 
 default:
 return state;}
 
 };
-}, 676, null, "ZhihuDiary/app/reducer/lastNewsListReducer.js");
+}, 688, null, "ZhihuDiary/app/reducer/newsListReducer.js");
 __d(/* ZhihuDiary/app/reducer/detailsReducer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 
 var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes); // 460 = ../actions/actionTypes
@@ -73692,7 +73732,7 @@ var _reactNativeRouterFlux=require(462                       ); // 462 = react-n
 
 
 var _hotNewsListContainer=require(509                                 );var _hotNewsListContainer2=babelHelpers.interopRequireDefault(_hotNewsListContainer); // 509 = ../containers/hotNewsListContainer
-var _lastNewsListContainer=require(677                                  );var _lastNewsListContainer2=babelHelpers.interopRequireDefault(_lastNewsListContainer); // 677 = ../containers/lastNewsListContainer
+var _newsListContainer=require(689                              );var _newsListContainer2=babelHelpers.interopRequireDefault(_newsListContainer); // 689 = ../containers/newsListContainer
 var _detailsContainer=require(682                             );var _detailsContainer2=babelHelpers.interopRequireDefault(_detailsContainer); // 682 = ../containers/detailsContainer
 
 var _TabIcon=require(515                    );var _TabIcon2=babelHelpers.interopRequireDefault(_TabIcon); // 515 = ../components/TabIcon
@@ -73726,13 +73766,13 @@ navigationBarStyle:styles.navBar,
 titleStyle:styles.navBarTitle},
 _react2.default.createElement(_reactNativeRouterFlux.Scene,{key:'root'},
 _react2.default.createElement(_reactNativeRouterFlux.Scene,{
+key:'newsList',
+component:_newsListContainer2.default,
+title:'newsList'}),
+_react2.default.createElement(_reactNativeRouterFlux.Scene,{
 key:'hotNewsList',
 component:_hotNewsListContainer2.default,
 title:'hotNewsList'}),
-_react2.default.createElement(_reactNativeRouterFlux.Scene,{
-key:'lastNewsList',
-component:_lastNewsListContainer2.default,
-title:'lastNewsList'}),
 _react2.default.createElement(_reactNativeRouterFlux.Scene,{
 key:'detailsList',
 component:_detailsContainer2.default,
@@ -79728,25 +79768,28 @@ LoadingView;
 }, 512, null, "ZhihuDiary/app/components/LoadingView.js");
 __d(/* ZhihuDiary/app/utils/URLs.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 
-
-var NEWS_LISTURL=exports.NEWS_LISTURL='http://news-at.zhihu.com/api/4/news/latest';
-
-
-var NEWS_NEWINFO_CONTENT=exports.NEWS_NEWINFO_CONTENT='http://news-at.zhihu.com/api/4/news/';
-var NEWS_NEWINFO_EXTRAINFO=exports.NEWS_NEWINFO_EXTRAINFO='http://news-at.zhihu.com/api/4/story-extra/';
+var NEWS_HEADER=exports.NEWS_HEADER='http://news-at.zhihu.com/api/4/';
 
 
+var NEWS_LATEST=exports.NEWS_LATEST='news/latest';
+var NEWS_BEFOR=exports.NEWS_BEFOR='news/before/';
 
-var NEWS_COMMENT_LONGCOMMENTS_BASEURL=exports.NEWS_COMMENT_LONGCOMMENTS_BASEURL='http://news-at.zhihu.com/api/4/story/';
+
+var NEWS_NEWINFO_CONTENT=exports.NEWS_NEWINFO_CONTENT='news/';
+var NEWS_NEWINFO_EXTRAINFO=exports.NEWS_NEWINFO_EXTRAINFO='story-extra/';
+
+
+
+var NEWS_COMMENT_LONGCOMMENTS_BASEURL=exports.NEWS_COMMENT_LONGCOMMENTS_BASEURL='story/';
 var NEWS_COMMENT_LONGCOMMENTS_PATH=exports.NEWS_COMMENT_LONGCOMMENTS_PATH='/long-comments';
 
 
-var NEWS_COMMENT_SHORTCOMMENTS_BASEURL=exports.NEWS_COMMENT_SHORTCOMMENTS_BASEURL='http://news-at.zhihu.com/api/4/story/';
+var NEWS_COMMENT_SHORTCOMMENTS_BASEURL=exports.NEWS_COMMENT_SHORTCOMMENTS_BASEURL='story/';
 var NEWS_COMMENT_SHORTCOMMENTS_PATH=exports.NEWS_COMMENT_SHORTCOMMENTS_PATH='/short-comments';
 
 
-var THEMES_LISTURL=exports.THEMES_LISTURL='http://news-at.zhihu.com/api/4/themes';
-var THEMES_THEMEINFO=exports.THEMES_THEMEINFO='http://news-at.zhihu.com/api/4/theme/';
+var THEMES_LISTURL=exports.THEMES_LISTURL='themes';
+var THEMES_THEMEINFO=exports.THEMES_THEMEINFO='theme/';
 
 
 var HOT_LISTURL=exports.HOT_LISTURL='http://news-at.zhihu.com/api/3/news/hot';
@@ -79783,47 +79826,47 @@ reject(error);
 });
 };
 }, 514, null, "ZhihuDiary/app/utils/RequestUtil.js");
-__d(/* ZhihuDiary/app/containers/lastNewsListContainer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
+__d(/* ZhihuDiary/app/containers/newsListContainer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 var _react=require(12     );var _react2=babelHelpers.interopRequireDefault(_react); // 12 = react
 var _reactRedux=require(424          ); // 424 = react-redux
 var _redux=require(404    ); // 404 = redux
-var _actionLastNewsList=require(678                            );var lastNewsListCreator=babelHelpers.interopRequireWildcard(_actionLastNewsList); // 678 = ../actions/actionLastNewsList
+var _actionLatestNewsList=require(690                              );var latestNewsListCreator=babelHelpers.interopRequireWildcard(_actionLatestNewsList); // 690 = ../actions/actionLatestNewsList
+var _actionBeforeNewsList=require(686                              );var beforeNewsListCreator=babelHelpers.interopRequireWildcard(_actionBeforeNewsList); // 686 = ../actions/actionBeforeNewsList
 
-var _LastNewsListView=require(679                        );var _LastNewsListView2=babelHelpers.interopRequireDefault(_LastNewsListView);var // 679 = ../pages/LastNewsListView
+var _NewsListView=require(691                    );var _NewsListView2=babelHelpers.interopRequireDefault(_NewsListView);var // 691 = ../pages/NewsListView
 
-LastNewsListViewContainer=function(_React$Component){babelHelpers.inherits(LastNewsListViewContainer,_React$Component);function LastNewsListViewContainer(){babelHelpers.classCallCheck(this,LastNewsListViewContainer);return babelHelpers.possibleConstructorReturn(this,(LastNewsListViewContainer.__proto__||Object.getPrototypeOf(LastNewsListViewContainer)).apply(this,arguments));}babelHelpers.createClass(LastNewsListViewContainer,[{key:'render',value:function render()
+NewsListViewContainer=function(_React$Component){babelHelpers.inherits(NewsListViewContainer,_React$Component);function NewsListViewContainer(){babelHelpers.classCallCheck(this,NewsListViewContainer);return babelHelpers.possibleConstructorReturn(this,(NewsListViewContainer.__proto__||Object.getPrototypeOf(NewsListViewContainer)).apply(this,arguments));}babelHelpers.createClass(NewsListViewContainer,[{key:'render',value:function render()
 {
-return _react2.default.createElement(_LastNewsListView2.default,this.props);
-}}]);return LastNewsListViewContainer;}(_react2.default.Component);
+return _react2.default.createElement(_NewsListView2.default,this.props);
+}}]);return NewsListViewContainer;}(_react2.default.Component);
 
 
 var mapStateToProps=function mapStateToProps(state){var
-lastNewsListReducer=state.lastNewsListReducer;
+newsListReducer=state.newsListReducer;
 return{
-lastNewsListReducer:lastNewsListReducer};
+newsListReducer:newsListReducer};
 
 };
 
 var mapDispatchToProps=function mapDispatchToProps(dispatch){
-var lastNewsListActions=(0,_redux.bindActionCreators)(lastNewsListCreator,dispatch);
+newListCreator=babelHelpers.extends({},latestNewsListCreator,beforeNewsListCreator);
+var newsListActions=(0,_redux.bindActionCreators)(newListCreator,dispatch);
 return{
-lastNewsListActions:lastNewsListActions};
+newsListActions:newsListActions};
 
 };exports.default=
 
-(0,_reactRedux.connect)(mapStateToProps,mapDispatchToProps)(LastNewsListViewContainer);
-}, 677, null, "ZhihuDiary/app/containers/lastNewsListContainer.js");
-__d(/* ZhihuDiary/app/actions/actionLastNewsList.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
+(0,_reactRedux.connect)(mapStateToProps,mapDispatchToProps)(NewsListViewContainer);
+}, 689, null, "ZhihuDiary/app/containers/newsListContainer.js");
+__d(/* ZhihuDiary/app/actions/actionLatestNewsList.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
 
-fetchLastNewsList=fetchLastNewsList;exports.
-
-
+fetchLatestNewsList=fetchLatestNewsList;exports.
 
 
 
 
 
-
+receiveLatestNewsList=receiveLatestNewsList;exports.
 
 
 
@@ -79832,27 +79875,73 @@ fetchLastNewsList=fetchLastNewsList;exports.
 
 
 
-
-
-
-
-
-receiveLastNewsList=receiveLastNewsList;exports.
-
-
-
-
-
-
-
-
-requestLastNewsList=requestLastNewsList;var _actionTypes=require(460            );var types=babelHelpers.interopRequireWildcard(_actionTypes);function fetchLastNewsList(){return{type:types.FETCH_LASTNEWS_LIST};}function printObject(receiveObject){var date=receiveObject.date,stories=receiveObject.stories,top_stories=receiveObject.top_stories;console.log("date:");console.log(date);console.log("stories:");stories.forEach(function(element){console.log(element);},this);console.log("top_stories:");top_stories.forEach(function(element){console.log(element);},this);}function receiveLastNewsList(receiveObject){printObject(receiveObject);return{type:types.RECEIVE_LASTNEWS_LIST,receiveObject:receiveObject};}function requestLastNewsList(){ // 460 = ./actionTypes
+requestLatestNewsList=requestLatestNewsList;var _actionTypes=require(460            );var types=babelHelpers.interopRequireWildcard(_actionTypes);function fetchLatestNewsList(){return{type:types.FETCH_LATESTNEWS_LIST};}function receiveLatestNewsList(receiveObject){printObject(receiveObject);return{type:types.RECEIVE_LATESTNEWS_LIST,receiveObject:receiveObject};}function requestLatestNewsList(){ // 460 = ./actionTypes
 return{
-type:types.REQUEST_LASTNEWS_LIST};
+type:types.REQUEST_LATESTNEWS_LIST};
 
 }
-}, 678, null, "ZhihuDiary/app/actions/actionLastNewsList.js");
-__d(/* ZhihuDiary/app/pages/LastNewsListView.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
+
+
+function printObject(receiveObject){var
+date=receiveObject.date,stories=receiveObject.stories,top_stories=receiveObject.top_stories;
+console.log("date:");
+console.log(date);
+
+console.log("stories:");
+stories.forEach(function(element){
+console.log(element);
+},this);
+
+console.log("top_stories:");
+top_stories.forEach(function(element){
+console.log(element);
+},this);
+}
+}, 690, null, "ZhihuDiary/app/actions/actionLatestNewsList.js");
+__d(/* ZhihuDiary/app/actions/actionBeforeNewsList.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
+
+
+
+fetchBeforeNewsList=fetchBeforeNewsList;exports.
+
+
+
+
+
+receiveBeforeNewsList=receiveBeforeNewsList;exports.
+
+
+
+
+
+
+
+
+requestBeforeNewsList=requestBeforeNewsList;var _actionTypes=require(460            );var types=babelHelpers.interopRequireWildcard(_actionTypes);function fetchBeforeNewsList(){return{type:types.FETCH_BEFORENEWS_LIST};}function receiveBeforeNewsList(receiveObject){printObject(receiveObject);return{type:types.RECEIVE_BEFORENEWS_LIST,receiveObject:receiveObject};}function requestBeforeNewsList(newsDate){ // 460 = ./actionTypes
+return{
+type:types.REQUEST_BEFORENEWS_LIST,
+newsDate:newsDate};
+
+}
+
+
+function printObject(receiveObject){
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+}, 686, null, "ZhihuDiary/app/actions/actionBeforeNewsList.js");
+__d(/* ZhihuDiary/app/pages/NewsListView.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 var _react=require(12     );var _react2=babelHelpers.interopRequireDefault(_react); // 12 = react
 var _LoadingView=require(512                        );var _LoadingView2=babelHelpers.interopRequireDefault(_LoadingView); // 512 = ../components/LoadingView
 var _reactNativeRouterFlux=require(462                       ); // 462 = react-native-router-flux
@@ -79877,24 +79966,28 @@ var _reactNative=require(42            ); // 42 = react-native
 var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs); // 513 = ../utils/URLs
 var _RequestUtil=require(514                   );var _RequestUtil2=babelHelpers.interopRequireDefault(_RequestUtil);var _Dimensions$get=_reactNative.Dimensions.get('window'),width=_Dimensions$get.width,height=_Dimensions$get.height;var // 514 = ../utils/RequestUtil
 
-LastNewsListView=function(_Component){babelHelpers.inherits(LastNewsListView,_Component);
+NewsListView=function(_Component){babelHelpers.inherits(NewsListView,_Component);
 
-function LastNewsListView(props){babelHelpers.classCallCheck(this,LastNewsListView);var _this=babelHelpers.possibleConstructorReturn(this,(LastNewsListView.__proto__||Object.getPrototypeOf(LastNewsListView)).call(this,
+function NewsListView(props){babelHelpers.classCallCheck(this,NewsListView);var _this=babelHelpers.possibleConstructorReturn(this,(NewsListView.__proto__||Object.getPrototypeOf(NewsListView)).call(this,
 props));
 _this.newsRequest=_this.newsRequest.bind(_this);
 _this.renderContent=_this.renderContent.bind(_this);
 _this.renderListView=_this.renderListView.bind(_this);
 _this.renderItem=_this.renderItem.bind(_this);return _this;
-}babelHelpers.createClass(LastNewsListView,[{key:'newsRequest',value:function newsRequest()
+}babelHelpers.createClass(NewsListView,[{key:'componentWillMount',value:function componentWillMount()
 
 {var
-lastNewsListActions=this.props.lastNewsListActions;
-lastNewsListActions.requestLastNewsList();
+newsListActions=this.props.newsListActions;
+newsListActions.requestLatestNewsList();
+}},{key:'newsRequest',value:function newsRequest()
+
+{
+
 }},{key:'renderContent',value:function renderContent()
 
 {var
-lastNewsListReducer=this.props.lastNewsListReducer;
-if(lastNewsListReducer.isLoading){
+newsListReducer=this.props.newsListReducer;
+if(newsListReducer.isLoading){
 return _react2.default.createElement(_LoadingView2.default,null);
 }
 }},{key:'jumpBack',value:function jumpBack()
@@ -79903,7 +79996,7 @@ return _react2.default.createElement(_LoadingView2.default,null);
 _reactNativeRouterFlux.Actions.pop;
 }},{key:'renderItem',value:function renderItem(
 
-news){
+news,sectionId,rowId){
 return(
 _react2.default.createElement(_reactNative.TouchableOpacity,{onPress:_reactNativeRouterFlux.Actions.pop},
 _react2.default.createElement(_reactNative.View,{style:itemStyle.containerItem},
@@ -79927,52 +80020,92 @@ news.news_id))))));
 
 
 
+}},{key:'renaderSectionHeader',value:function renaderSectionHeader(
+
+
+
+
+
+data,sectionId){var
+dateList=this.props.newsListReducer.dateList;
+return _react2.default.createElement(_reactNative.Text,null,'this is header ',dateList[sectionId]);
 }},{key:'renderListView',value:function renderListView()
 
-{var _props$lastNewsListRe=
-this.props.lastNewsListReducer.receiveObject,date=_props$lastNewsListRe.date,stories=_props$lastNewsListRe.stories,top_stories=_props$lastNewsListRe.top_stories;
-if(stories&&stories.length!=0){
-var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});
-var data=ds.cloneWithRows(stories);
+{var _props$newsListReduce=
+this.props.newsListReducer,dateList=_props$newsListReduce.dateList,storiesList=_props$newsListReduce.storiesList,top_storiesList=_props$newsListReduce.top_storiesList;
+if(storiesList&&storiesList.length!=0){
+var ds=new _reactNative.ListView.DataSource({
+rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;},
+sectionHeaderHasChanged:function sectionHeaderHasChanged(s1,s2){return s1!==s2;}});
+
+var data=ds.cloneWithRowsAndSections(storiesList);
+
 return _react2.default.createElement(_reactNative.ListView,{
 dataSource:data,
-renderRow:this.renderItem});
+renderRow:this.renderItem,
 
 
+refreshControl:
+_react2.default.createElement(_reactNative.RefreshControl,{
+style:styles.refreshControlBase,
+refreshing:this.props.newsListReducer.isLoading,
+onRefresh:this.reloadData.bind(this),
+title:'Loading...',
+colors:['#ffaa66cc','#ff00ddff','#ffffbb33','#ffff4444']}),
 
 
-
-
-
-
-
-
+renderFooter:this.renderFooter.bind(this),
+renderSectionHeader:this.renaderSectionHeader.bind(this),
+onEndReached:this.onEndReached.bind(this)});
 
 
 }
+}},{key:'onEndReached',value:function onEndReached()
+
+{var
+newsListActions=this.props.newsListActions;var
+dateList=this.props.newsListReducer.dateList;
+setTimeout(function(){
+newsListActions.requestBeforeNewsList(dateList[dateList.length-1]);
+},1000);
+}},{key:'renderFooter',value:function renderFooter()
+
+{
+
+if(this.state&&this.state.isShowBottomRefresh){
+return _react2.default.createElement(_reactNative.View,{style:{marginVertical:10}},
+_react2.default.createElement(ActivityIndicator,null));
+
+}
+return _react2.default.createElement(_reactNative.View,{style:{marginVertical:10}});;
+}},{key:'reloadData',value:function reloadData()
+
+{var
+newsListActions=this.props.newsListActions;
+newsListActions.requestLatestNewsList();
 }},{key:'render',value:function render()
 
-{var _props$lastNewsListRe2=
-this.props.lastNewsListReducer.receiveObject,date=_props$lastNewsListRe2.date,stories=_props$lastNewsListRe2.stories,top_stories=_props$lastNewsListRe2.top_stories;
+{var _props$newsListReduce2=
+this.props.newsListReducer,dateList=_props$newsListReduce2.dateList,storiesList=_props$newsListReduce2.storiesList,top_storiesList=_props$newsListReduce2.top_storiesList;
 var storiesSize=0;
-if(!stories){
+if(!storiesList){
 storiesSize=0;
 }else{
-storiesSize=stories.length;
+storiesSize=storiesList.length;
 }
 return(
 _react2.default.createElement(_reactNative.View,{style:styles.container},
-this.renderContent(),
+
 
 _react2.default.createElement(_reactNative.TouchableHighlight,{style:styles.itemView,underlayColor:'red',onPress:this.newsRequest},
-_react2.default.createElement(_reactNative.Text,{style:styles.itemText},
+_react2.default.createElement(_reactNative.Text,{style:styles.itemText},'current section count is :  ',
 storiesSize)),
 
 
 this.renderListView()));
 
 
-}}]);return LastNewsListView;}(_react.Component);
+}}]);return NewsListView;}(_react.Component);
 
 
 var styles=_reactNative.StyleSheet.create({
@@ -80110,8 +80243,8 @@ height:2}});exports.default=
 
 
 
-LastNewsListView;
-}, 679, null, "ZhihuDiary/app/pages/LastNewsListView.js");
+NewsListView;
+}, 691, null, "ZhihuDiary/app/pages/NewsListView.js");
 __d(/* ZhihuDiary/app/containers/detailsContainer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
 var _react=require(12     );var _react2=babelHelpers.interopRequireDefault(_react); // 12 = react
 var _reactRedux=require(424          ); // 424 = react-redux
@@ -85784,11 +85917,14 @@ __d(/* ZhihuDiary/app/sagas/rootSaga.js */function(global, require, module, expo
 
 
 
-rootSaga;var _effects=require(456                 );var _hotNewsListSaga=require(672                );var _lastNewsListSaga=require(680                 );var _detailsSaga=require(685            );var _marked=[rootSaga].map(regeneratorRuntime.mark);function rootSaga(){return regeneratorRuntime.wrap(function rootSaga$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.next=2;return( // 685 = ./detailsSaga // 680 = ./lastNewsListSaga // 672 = ./hotNewsListSaga // 456 = redux-saga/effects
+
+
+rootSaga;var _effects=require(456                 );var _hotNewsListSaga=require(672                );var _latestNewsListSaga=require(692                   );var _beforeNewsListSaga=require(687                   );var _detailsSaga=require(685            );var _marked=[rootSaga].map(regeneratorRuntime.mark);function rootSaga(){return regeneratorRuntime.wrap(function rootSaga$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.next=2;return( // 685 = ./detailsSaga // 687 = ./beforeNewsListSaga // 692 = ./latestNewsListSaga // 672 = ./hotNewsListSaga // 456 = redux-saga/effects
 [
 (0,_effects.fork)(_hotNewsListSaga.watchRequestHotNewsList),
-(0,_effects.fork)(_lastNewsListSaga.watchRequestLastNewsList),
-(0,_effects.fork)(_detailsSaga.watchRequestDetailsList)]);case 2:case'end':return _context.stop();}}},_marked[0],this);}
+(0,_effects.fork)(_latestNewsListSaga.watchRequestLatestNewsList),
+(0,_effects.fork)(_detailsSaga.watchRequestDetailsList),
+(0,_effects.fork)(_beforeNewsListSaga.watchRequestBeforeNewsList)]);case 2:case'end':return _context.stop();}}},_marked[0],this);}
 }, 671, null, "ZhihuDiary/app/sagas/rootSaga.js");
 __d(/* ZhihuDiary/app/sagas/hotNewsListSaga.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
 
@@ -88149,7 +88285,7 @@ _reactNative.ToastAndroid.show(content.toString(),_reactNative.ToastAndroid.LONG
 }
 };
 }, 675, null, "ZhihuDiary/app/utils/ToastUtil.js");
-__d(/* ZhihuDiary/app/sagas/lastNewsListSaga.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
+__d(/* ZhihuDiary/app/sagas/latestNewsListSaga.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
 
 
 
@@ -88163,7 +88299,7 @@ __d(/* ZhihuDiary/app/sagas/lastNewsListSaga.js */function(global, require, modu
 
 
 
-requestLastNewsList=requestLastNewsList;exports.
+requestLatestNewsList=requestLatestNewsList;exports.
 
 
 
@@ -88187,11 +88323,55 @@ requestLastNewsList=requestLastNewsList;exports.
 
 
 
-watchRequestLastNewsList=watchRequestLastNewsList;var _effects=require(456                 );var _reactNativeSimpleStore=require(673                        );var _reactNativeSimpleStore2=babelHelpers.interopRequireDefault(_reactNativeSimpleStore);var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs);var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes);var _ToastUtil=require(675                 );var _RequestUtil=require(514                   );var _actionLastNewsList=require(678                            );var _marked=[requestLastNewsList,watchRequestLastNewsList].map(regeneratorRuntime.mark);function requestLastNewsList(){var receiveObject;return regeneratorRuntime.wrap(function requestLastNewsList$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.prev=0;console.log('1');_context.next=4;return(0,_effects.put)((0,_actionLastNewsList.fetchLastNewsList)());case 4:console.log('2');_context.next=7;return(0,_effects.call)(_RequestUtil.request,urls.NEWS_LISTURL,'get');case 7:receiveObject=_context.sent;console.log(receiveObject);console.log('333');_context.next=12;return(0,_effects.put)((0,_actionLastNewsList.receiveLastNewsList)(receiveObject));case 12:console.log('4');_context.next=21;break;case 15:_context.prev=15;_context.t0=_context['catch'](0);_context.next=19;return(0,_effects.put)((0,_actionLastNewsList.receiveLastNewsList)([]));case 19:_context.next=21;return(0,_ToastUtil.toastShort)('网络发生错误，请重试');case 21:case'end':return _context.stop();}}},_marked[0],this,[[0,15]]);}function watchRequestLastNewsList(){return regeneratorRuntime.wrap(function watchRequestLastNewsList$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:if(! // 678 = ../actions/actionLastNewsList // 514 = ../utils/RequestUtil // 675 = ../utils/ToastUtil // 460 = ../actions/actionTypes // 513 = ../utils/URLs // 673 = react-native-simple-store // 456 = redux-saga/effects
+watchRequestLatestNewsList=watchRequestLatestNewsList;var _effects=require(456                 );var _reactNativeSimpleStore=require(673                        );var _reactNativeSimpleStore2=babelHelpers.interopRequireDefault(_reactNativeSimpleStore);var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs);var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes);var _ToastUtil=require(675                 );var _RequestUtil=require(514                   );var _actionLatestNewsList=require(690                              );var _marked=[requestLatestNewsList,watchRequestLatestNewsList].map(regeneratorRuntime.mark);function requestLatestNewsList(){var receiveObject;return regeneratorRuntime.wrap(function requestLatestNewsList$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.prev=0;console.log('1');_context.next=4;return(0,_effects.put)((0,_actionLatestNewsList.fetchLatestNewsList)());case 4:console.log('2');_context.next=7;return(0,_effects.call)(_RequestUtil.request,urls.NEWS_HEADER+urls.NEWS_LATEST,'get');case 7:receiveObject=_context.sent;console.log(receiveObject);console.log('333');_context.next=12;return(0,_effects.put)((0,_actionLatestNewsList.receiveLatestNewsList)(receiveObject));case 12:console.log('4');_context.next=21;break;case 15:_context.prev=15;_context.t0=_context['catch'](0);_context.next=19;return(0,_effects.put)((0,_actionLatestNewsList.receiveLatestNewsList)([]));case 19:_context.next=21;return(0,_ToastUtil.toastShort)('网络发生错误，请重试');case 21:case'end':return _context.stop();}}},_marked[0],this,[[0,15]]);}function watchRequestLatestNewsList(){return regeneratorRuntime.wrap(function watchRequestLatestNewsList$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:if(! // 690 = ../actions/actionLatestNewsList // 514 = ../utils/RequestUtil // 675 = ../utils/ToastUtil // 460 = ../actions/actionTypes // 513 = ../utils/URLs // 673 = react-native-simple-store // 456 = redux-saga/effects
 true){_context2.next=7;break;}_context2.next=3;return(
-(0,_effects.take)(actionTypes.REQUEST_LASTNEWS_LIST));case 3:_context2.next=5;return(
-(0,_effects.fork)(requestLastNewsList));case 5:_context2.next=0;break;case 7:case'end':return _context2.stop();}}},_marked[1],this);}
-}, 680, null, "ZhihuDiary/app/sagas/lastNewsListSaga.js");
+(0,_effects.take)(actionTypes.REQUEST_LATESTNEWS_LIST));case 3:_context2.next=5;return(
+(0,_effects.fork)(requestLatestNewsList));case 5:_context2.next=0;break;case 7:case'end':return _context2.stop();}}},_marked[1],this);}
+}, 692, null, "ZhihuDiary/app/sagas/latestNewsListSaga.js");
+__d(/* ZhihuDiary/app/sagas/beforeNewsListSaga.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
+
+
+
+
+
+
+
+
+
+
+requestBeforeNewsList=requestBeforeNewsList;exports.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+watchRequestBeforeNewsList=watchRequestBeforeNewsList;var _effects=require(456                 );var _reactNativeSimpleStore=require(673                        );var _reactNativeSimpleStore2=babelHelpers.interopRequireDefault(_reactNativeSimpleStore);var _URLs=require(513            );var urls=babelHelpers.interopRequireWildcard(_URLs);var _actionTypes=require(460                     );var actionTypes=babelHelpers.interopRequireWildcard(_actionTypes);var _ToastUtil=require(675                 );var _RequestUtil=require(514                   );var _actionBeforeNewsList=require(686                              );var _marked=[requestBeforeNewsList,watchRequestBeforeNewsList].map(regeneratorRuntime.mark);function requestBeforeNewsList(newsDate){var url,receiveObject;return regeneratorRuntime.wrap(function requestBeforeNewsList$(_context){while(1){switch(_context.prev=_context.next){case 0:_context.prev=0;console.log('1');_context.next=4;return(0,_effects.put)((0,_actionBeforeNewsList.fetchBeforeNewsList)());case 4:console.log('2..........');url=urls.NEWS_HEADER+urls.NEWS_BEFOR+newsDate;console.log(url);_context.next=9;return(0,_effects.call)(_RequestUtil.request,url,'get');case 9:receiveObject=_context.sent;console.log(receiveObject);console.log('333');_context.next=14;return(0,_effects.put)((0,_actionBeforeNewsList.receiveBeforeNewsList)(receiveObject));case 14:console.log('4');_context.next=23;break;case 17:_context.prev=17;_context.t0=_context['catch'](0);_context.next=21;return(0,_effects.put)((0,_actionBeforeNewsList.receiveBeforeNewsList)([]));case 21:_context.next=23;return(0,_ToastUtil.toastShort)('网络发生错误，请重试');case 23:case'end':return _context.stop();}}},_marked[0],this,[[0,17]]);}function watchRequestBeforeNewsList(){var _ref,newsDate;return regeneratorRuntime.wrap(function watchRequestBeforeNewsList$(_context2){while(1){switch(_context2.prev=_context2.next){case 0:if(! // 686 = ../actions/actionBeforeNewsList // 514 = ../utils/RequestUtil // 675 = ../utils/ToastUtil // 460 = ../actions/actionTypes // 513 = ../utils/URLs // 673 = react-native-simple-store // 456 = redux-saga/effects
+true){_context2.next=9;break;}_context2.next=3;return(
+
+
+(0,_effects.take)(actionTypes.REQUEST_BEFORENEWS_LIST));case 3:_ref=_context2.sent;newsDate=_ref.newsDate;_context2.next=7;return(
+(0,_effects.fork)(requestBeforeNewsList,newsDate));case 7:_context2.next=0;break;case 9:case'end':return _context2.stop();}}},_marked[1],this);}
+}, 687, null, "ZhihuDiary/app/sagas/beforeNewsListSaga.js");
 __d(/* ZhihuDiary/app/sagas/detailsSaga.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});exports.
 
 

@@ -3,12 +3,12 @@
 import { combineReducers } from 'redux';
 
 import hotNewsListReducer from './hotNewsListReducer'
-import lastNewsListReducer from './lastNewsListReducer'
+import newsListReducer from './newsListReducer'
 import detailsReducer from './detailsReducer'
 
 const rootReducer = combineReducers({
   hotNewsListReducer,
-  lastNewsListReducer,
+  newsListReducer,
   detailsReducer
 });
 

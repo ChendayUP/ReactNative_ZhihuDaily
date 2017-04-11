@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get('window');
 import * as urls from '../utils/URLs'
 import request from '../utils/RequestUtil'
 
-class LastNewsListView extends Component {
+class NewsListView extends Component {
 
     constructor(props) {
         super(props)
@@ -33,14 +33,18 @@ class LastNewsListView extends Component {
         this.renderItem = this.renderItem.bind(this)
     }
 
+    componentWillMount() {
+        const { newsListActions } = this.props
+        newsListActions.requestLatestNewsList();
+    }
+
     newsRequest() {
-        const { lastNewsListActions } = this.props
-        lastNewsListActions.requestLastNewsList();
+
     }
 
     renderContent() {
-        const { lastNewsListReducer } = this.props;
-        if (lastNewsListReducer.isLoading) {
+        const { newsListReducer } = this.props;
+        if (newsListReducer.isLoading) {
             return <LoadingView />
         }
     }
@@ -49,7 +53,7 @@ class LastNewsListView extends Component {
         Actions.pop;
     }
 
-    renderItem(news) {
+    renderItem(news, sectionId, rowId) {
         return (
             <TouchableOpacity onPress={Actions.pop}>
                 <View style={itemStyle.containerItem}>
@@ -75,44 +79,84 @@ class LastNewsListView extends Component {
         );
     }
 
+    // renderHeader() {
+    //     return (<Text>11111</Text>);
+    // }
+
+    renaderSectionHeader(data, sectionId) {
+        const { dateList } = this.props.newsListReducer;
+        return (<Text>this is header {dateList[sectionId]}</Text>)
+    }
+
     renderListView() {
-        const { date, stories, top_stories } = this.props.lastNewsListReducer.receiveObject;
-        if (stories && stories.length != 0) {
-            const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-            const data = ds.cloneWithRows(stories)
+        const { dateList, storiesList, top_storiesList } = this.props.newsListReducer;
+        if (storiesList && storiesList.length != 0) {
+            const ds = new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 !== r2,
+                sectionHeaderHasChanged: (s1, s2) => s1 !== s2
+            });
+            const data = ds.cloneWithRowsAndSections(storiesList)
+
             return <ListView
                 dataSource={data}
                 renderRow={this.renderItem}
 
-            //refresh
-            // refreshControl={
-            //     <RefreshControl
-            //         style={styles.refreshControlBase}
-            //         refreshing={zhihuNewsReducer.isLoading}
-            //         onRefresh={() => console.log("freshing........")}
-            //         title="Loading..."
-            //         colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
-            //     />
-            // }
+                //refresh
+                refreshControl={
+                    <RefreshControl
+                        style={styles.refreshControlBase}
+                        refreshing={this.props.newsListReducer.isLoading}
+                        onRefresh={this.reloadData.bind(this)}
+                        title="Loading..."
+                        colors={['#ffaa66cc', '#ff00ddff', '#ffffbb33', '#ffff4444']}
+                    />
+                }
+                renderFooter={this.renderFooter.bind(this)}
+                renderSectionHeader={this.renaderSectionHeader.bind(this)}
+                onEndReached={this.onEndReached.bind(this)}
+            // onEndReachedThreshold={0}
             />
         }
     }
 
+    onEndReached() {
+        const { newsListActions } = this.props
+        const { dateList } = this.props.newsListReducer
+        setTimeout(function () {
+            newsListActions.requestBeforeNewsList(dateList[dateList.length - 1]);
+        }, 1000);
+    }
+
+    renderFooter() {
+
+        if (this.state && this.state.isShowBottomRefresh) {
+            return (<View style={{ marginVertical: 10 }}>
+                <ActivityIndicator />
+            </View>);
+        }
+        return <View style={{ marginVertical: 10 }} />;;
+    }
+
+    reloadData() {
+        const { newsListActions } = this.props
+        newsListActions.requestLatestNewsList();
+    }
+
     render() {
-        const { date, stories, top_stories } = this.props.lastNewsListReducer.receiveObject;
+        const { dateList, storiesList, top_storiesList } = this.props.newsListReducer;
         var storiesSize = 0;
-        if (!stories) {
+        if (!storiesList) {
             storiesSize = 0;
         } else {
-            storiesSize = stories.length;
+            storiesSize = storiesList.length;
         }
         return (
             <View style={styles.container}>
-                {this.renderContent()}
+                {/**this.renderContent()**/}
 
                 <TouchableHighlight style={styles.itemView} underlayColor="red" onPress={this.newsRequest}>
                     <Text style={styles.itemText}>
-                        {storiesSize}
+                        current section count is :  {storiesSize}
                     </Text>
                 </TouchableHighlight>
                 {this.renderListView()}
@@ -256,4 +300,4 @@ const itemStyle = StyleSheet.create({
     }
 });
 
-export default LastNewsListView
+export default NewsListView

@@ -6,21 +6,20 @@ import * as urls from '../utils/URLs'
 import * as actionTypes from '../actions/actionTypes'
 import { toastShort } from '../utils/ToastUtil';
 import { request } from '../utils/RequestUtil';
-// import { WEXIN_ARTICLE_TYPE } from '../constants/Urls';
 
-// import { fetchTypeList, receiveTypeList } from '../actions/category';
+import { fetchBeforeNewsList, receiveBeforeNewsList } from '../actions/actionBeforeNewsList'
 
-import { fetchLastNewsList, receiveLastNewsList } from '../actions/actionLastNewsList'
-
-export function* requestLastNewsList() {
+export function* requestBeforeNewsList(newsDate) {
   try {
     console.log('1')
-    yield put(fetchLastNewsList());
-    console.log('2')
-    const receiveObject = yield call(request, urls.NEWS_LISTURL, 'get');
+    yield put(fetchBeforeNewsList());
+    console.log('2..........')
+    const url = urls.NEWS_HEADER + urls.NEWS_BEFOR + newsDate;
+    console.log(url)
+    const receiveObject = yield call(request, url, 'get');
     console.log(receiveObject)
     console.log('333')
-    yield put(receiveLastNewsList(receiveObject));
+    yield put(receiveBeforeNewsList(receiveObject));
     // receiveZhihuNews(typeList.recent)
     console.log('4')
     // yield call(store.save, 'zhihuNews', typeList.recent);
@@ -31,16 +30,16 @@ export function* requestLastNewsList() {
     //   yield toastShort(errorMessage);
     // }
   } catch (error) {
-    yield put(receiveLastNewsList([]));
+    yield put(receiveBeforeNewsList([]));
     yield toastShort('网络发生错误，请重试');
   }
 }
 
-export function* watchRequestLastNewsList() {
+export function* watchRequestBeforeNewsList() {
   while (true) {
-    yield take(actionTypes.REQUEST_LASTNEWS_LIST);
-    yield fork(requestLastNewsList);
+    const {
+      newsDate
+    } = yield take(actionTypes.REQUEST_BEFORENEWS_LIST);
+    yield fork(requestBeforeNewsList, newsDate);
   }
 }
-
-
