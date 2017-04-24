@@ -13,6 +13,7 @@ import { Router, Scene, ActionConst } from 'react-native-router-flux';
 import hotNewsListContainer from '../containers/hotNewsListContainer'
 import newsListContainer from '../containers/newsListContainer'
 import detailsListContainer from '../containers/detailsContainer'
+import styleTest from '../pages/StyleTestView'
 
 import TabIcon from '../components/TabIcon';
 
@@ -44,6 +45,12 @@ class App extends React.Component {
                 navigationBarStyle={styles.navBar}
                 titleStyle={styles.navBarTitle} >
                 <Scene key="root">
+
+                    <Scene
+                        key="styleTest"
+                        component={styleTest}
+                        title="styleTest" />
+                
                     <Scene
                         key="newsList"
                         component={newsListContainer}
