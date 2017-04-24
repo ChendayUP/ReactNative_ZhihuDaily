@@ -1,2 +1,3 @@
 # ReactNative_ZhihuDaily
-zhihu Diary reactNative test
+
+modify zhihu Diary reactNative test
